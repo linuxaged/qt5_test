@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "todolist.h"
 #include "todomodel.h"
 
 int main(int argc, char *argv[])
@@ -10,7 +12,9 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<ToDoModel>("ToDo", 1, 0, "ToDoModel");
 
+    ToDoList toDoList;
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty(QStringLiteral("toDoList"), &toDoList);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
