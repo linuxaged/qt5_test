@@ -2,6 +2,7 @@
 #define TODOLIST_H
 
 #include <QObject>
+#include <QVector>
 
 struct ToDoItem
 {
@@ -21,7 +22,7 @@ signals:
     void preItemAppended();
     void postItemAppended();
 
-    void preItemRemoved();
+    void preItemRemoved(int index);
     void postItemRemoved();
 
 public slots:

@@ -2,7 +2,7 @@
 #include "todolist.h"
 ToDoModel::ToDoModel(QObject *parent)
     : QAbstractListModel(parent)
-    , list(nullptr)
+    , mList(nullptr)
 {
 }
 
@@ -10,31 +10,44 @@ int ToDoModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
-    if (parent.isValid())
+    if (parent.isValid() || !mList)
         return 0;
 
     // FIXME: Implement me!
-    return 100;
+    return mList->items().size();
 }
 
 QVariant ToDoModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid())
+    if (!index.isValid() || !mList)
         return QVariant();
 
     // FIXME: Implement me!
+    const ToDoItem item = mList->items().at(index.row());
     switch (role) {
     case DoneRole:
-        return QVariant(false);
+        return QVariant(item.done);
     case DescriptionRole:
-        return QVariant(QStringLiteral("Test description"));
+        return QVariant(item.description);
     }
     return QVariant();
 }
 
 bool ToDoModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (data(index, role) != value) {
+    if (!mList)
+        return false;
+
+    ToDoItem item = mList->items().at(index.row());
+    switch (role) {
+    case DoneRole:
+        item.done = value.toBool();
+        break;
+    case DescriptionRole:
+        item.description = value.toString();
+        break;
+    }
+    if (mList->setItemAt(index.row(), item)) {
         // FIXME: Implement me!
         emit dataChanged(index, index, QVector<int>() << role);
         return true;

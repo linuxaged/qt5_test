@@ -2,8 +2,8 @@
 
 ToDoList::ToDoList(QObject *parent) : QObject(parent)
 {
-    mItems.append({true, QStringLiteral("买电影票")});
-    mItems.append({false, QStringLiteral("预定酒店")});
+    mItems.append({true, QString(("买电影票"))});
+    mItems.append({false, QString(("预定酒店"))});
 }
 
 QVector<ToDoItem> ToDoList::items() const
@@ -37,7 +37,7 @@ void ToDoList::removeCompletedItems()
 {
     for (int i=0; i<mItems.size();) {
         if (mItems.at(i).done){
-            emit preItemRemoved();
+            emit preItemRemoved(i);
             mItems.removeAt(i);
 
             emit postItemRemoved();
